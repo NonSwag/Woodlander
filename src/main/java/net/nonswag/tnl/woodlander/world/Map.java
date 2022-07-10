@@ -24,7 +24,7 @@ public class Map {
 
     @Nonnull
     private Tile[][] parse(@Nonnull String resource) throws IOException {
-        try (InputStream stream = Woodlander.class.getResourceAsStream(resource)) {
+        try (InputStream stream = getClass().getResourceAsStream(resource)) {
             if (stream == null) return new Tile[0][];
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
             List<String> lines = reader.lines().toList();
@@ -42,5 +42,21 @@ public class Map {
     }
 
     public void paint(@Nonnull Location location, @Nonnull Graphics2D graphic) {
+        int col = 0, row = 0;
+        int length = tiles.length;
+        while (col < length && row < length) {
+            Tile tile = tiles[col][row];
+            int worldX = col * tile.getSize();
+            int worldY = row * tile.getSize();
+            int screenX = worldX - (int) location.x() + (Woodlander.WINDOW.getHeight() / 2 - tile.getSize() / 2);
+            int screenY = worldY - (int) location.y() + (Woodlander.WINDOW.getHeight() / 2 - tile.getSize() / 2);
+            if (worldX > location.x() - screenX && worldX < location.x() + screenX &&
+                    worldY > location.y() - screenY && worldY < location.y() + screenY) {
+                graphic.drawImage(tile.getImage(), screenX, screenY, tile.getSize(), tile.getSize(), null);
+            }
+            if (++col != length) continue;
+            col = 0;
+            row++;
+        }
     }
 }

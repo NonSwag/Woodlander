@@ -26,7 +26,7 @@ public abstract class World {
     @Nonnull
     public Location center() {
         int mid = map.getTiles().length / 2;
-        return new Location(this, mid, map.getTiles()[mid].length / 2d);
+        return new Location(this, mid * 48, (map.getTiles()[mid].length / 2d) * 48);
     }
 
     @Override

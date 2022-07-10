@@ -1,7 +1,6 @@
 package net.nonswag.tnl.woodlander;
 
 import net.nonswag.tnl.woodlander.world.World;
-import net.nonswag.tnl.woodlander.world.entities.Entity;
 import net.nonswag.tnl.woodlander.world.worlds.Overworld;
 
 import javax.annotation.Nonnull;
@@ -27,18 +26,7 @@ public class Woodlander {
         }
     };
     @Nonnull
-    public static final List<Entity> ENTITIES = new ArrayList<>(){
-        @Override
-        public boolean add(@Nullable Entity entity) {
-            if (entity == null) throw new IllegalArgumentException("entity cannot be null");
-            if (contains(entity)) throw new IllegalArgumentException("an entity with this id is already registered");
-            return super.add(entity);
-        }
-    };
-    @Nonnull
     public static final GamePanel GAME_PANEL;
-    public static int WIDTH = 1080;
-    public static int HEIGHT = 720;
     public static int FPS = 60;
     public static boolean STOPPING = false;
 
@@ -65,9 +53,10 @@ public class Woodlander {
 
     private static void initWindow() {
         WINDOW.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        WINDOW.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        WINDOW.setMinimumSize(new Dimension(WIDTH / 2, HEIGHT / 2));
+        WINDOW.setPreferredSize(new Dimension(1080, 720));
+        WINDOW.setMinimumSize(new Dimension(540, 360));
         WINDOW.setContentPane(GAME_PANEL);
+        // WINDOW.setResizable(false);
         WINDOW.pack();
         WINDOW.setLocationRelativeTo(null);
         WINDOW.setVisible(true);

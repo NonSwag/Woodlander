@@ -21,6 +21,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     public GamePanel() throws IOException {
         requestFocus(FocusEvent.Cause.ACTIVATION);
+        setBackground(Color.BLACK);
+        setDoubleBuffered(true);
+        addKeyListener(player);
+        setFocusable(true);
         gameLoop.start();
     }
 
@@ -31,10 +35,12 @@ public class GamePanel extends JPanel implements Runnable {
         World world = getPlayer().getWorld();
         world.getMap().paint(getPlayer().getLocation(), graphic);
         for (Entity entity : world.getEntities()) entity.paint(graphic);
+        graphic.dispose();
     }
 
     @Override
     public void run() {
+        for (Entity entity : getPlayer().getWorld().getEntities()) entity.tick();
         repaint();
     }
 }

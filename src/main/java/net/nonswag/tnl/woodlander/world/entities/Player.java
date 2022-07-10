@@ -1,17 +1,36 @@
 package net.nonswag.tnl.woodlander.world.entities;
 
+import net.nonswag.tnl.woodlander.Woodlander;
 import net.nonswag.tnl.woodlander.world.Location;
+import net.nonswag.tnl.woodlander.world.images.Images;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
 
 public class Player extends Entity implements KeyListener {
 
-    public Player(@Nonnull Location location) throws IOException {
-        super(location, "/images/entity/player/", "player_down_1.png", "player_down_2.png", "player_up_1.png", "player_up_2.png",
-                "player_right_1.png", "player_right_2.png", "player_left_1.png", "player_left_2.png");
+    private int state = 0;
+
+    private boolean up = false;
+    private boolean down = false;
+    private boolean left = false;
+    private boolean right = false;
+
+    private int sprite = 0;
+
+    public Player(@Nonnull Location location) {
+        super(location);
+    }
+
+    @Override
+    public void paint(@Nonnull Graphics2D graphic) {
+        Images model = getModel();
+        int s = model.getSize();
+        int x = Woodlander.WINDOW.getWidth() / 2 - s / 2;
+        int y = Woodlander.WINDOW.getHeight() / 2 - s / 2;
+        graphic.drawImage(model.getImage(), x, y, s, s, null);
     }
 
     @Override
@@ -20,9 +39,54 @@ public class Player extends Entity implements KeyListener {
 
     @Override
     public void keyPressed(@Nonnull KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.VK_W) {
+            setDirection(Location.Direction.UP);
+            up = true;
+        } else if (event.getKeyCode() == KeyEvent.VK_S) {
+            setDirection(Location.Direction.DOWN);
+            down = true;
+        } else if (event.getKeyCode() == KeyEvent.VK_D) {
+            setDirection(Location.Direction.RIGHT);
+            right = true;
+        } else if (event.getKeyCode() == KeyEvent.VK_A) {
+            setDirection(Location.Direction.LEFT);
+            left = true;
+        }
     }
 
     @Override
     public void keyReleased(@Nonnull KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.VK_W) up = false;
+        else if (event.getKeyCode() == KeyEvent.VK_S) down = false;
+        else if (event.getKeyCode() == KeyEvent.VK_D) right = false;
+        else if (event.getKeyCode() == KeyEvent.VK_A) left = false;
+    }
+
+    @Override
+    public boolean isMoving() {
+        return (up && getDirection().equals(Location.Direction.UP)) ||
+                (down && getDirection().equals(Location.Direction.DOWN)) ||
+                (right && getDirection().equals(Location.Direction.RIGHT)) ||
+                (left && getDirection().equals(Location.Direction.LEFT));
+    }
+
+    @Nonnull
+    private Images getModel() {
+        if (isMoving() && state++ >= 13) {
+            if (sprite == 0) sprite = 1;
+            else sprite = 0;
+            state = 0;
+        }
+        return sprite == 0 || !isMoving() ? switch (getDirection()) {
+            case UP -> Images.PLAYER_UP_1;
+            case DOWN -> Images.PLAYER_DOWN_1;
+            case LEFT -> Images.PLAYER_LEFT_1;
+            case RIGHT -> Images.PLAYER_RIGHT_1;
+        } : switch (getDirection()) {
+            case UP -> Images.PLAYER_UP_2;
+            case DOWN -> Images.PLAYER_DOWN_2;
+            case LEFT -> Images.PLAYER_LEFT_2;
+            case RIGHT -> Images.PLAYER_RIGHT_2;
+        };
     }
 }

@@ -1,46 +1,50 @@
 package net.nonswag.tnl.woodlander.world.entities;
 
 import lombok.Getter;
-import net.nonswag.tnl.woodlander.Woodlander;
+import lombok.Setter;
 import net.nonswag.tnl.woodlander.world.Location;
 import net.nonswag.tnl.woodlander.world.World;
 
 import javax.annotation.Nonnull;
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Objects;
 
 @Getter
+@Setter
 public abstract class Entity {
 
     private static int ID = 0;
 
     @Nonnull
-    private final Image[] images;
-    @Nonnull
     private Location location;
+    @Nonnull
+    private Location.Direction direction = Location.Direction.DOWN;
+    @Nonnull
+    private final Rectangle hitbox = new Rectangle(8, 16, 32, 32);
     private final int id = ID++;
+    private double speed = 3;
 
-    protected Entity(@Nonnull Location location, @Nonnull String path, @Nonnull String... images) throws IOException {
+    protected Entity(@Nonnull Location location) {
         this.location = location;
-        this.images = new Image[images.length];
-        for (int i = 0; i < images.length; i++) {
-            try (InputStream stream = Woodlander.class.getClassLoader().getResourceAsStream(path + images[i])) {
-                if (stream != null) this.images[i] = ImageIO.read(stream);
-            }
-        }
-        Woodlander.ENTITIES.add(this);
+        location.world().getEntities().add(this);
     }
 
-    public void move(double x, double z) {
-        move(new Location(getWorld(), x, z));
+    public void stepForward() {
+        switch (getDirection()) {
+            case UP -> move(getLocation().x(), getLocation().y() - getSpeed());
+            case DOWN -> move(getLocation().x(), getLocation().y() + getSpeed());
+            case LEFT -> move(getLocation().x() - getSpeed(), getLocation().y());
+            case RIGHT -> move(getLocation().x() + getSpeed(), getLocation().y());
+        }
+    }
+
+    public void move(double x, double y) {
+        move(new Location(getWorld(), x, y));
     }
 
     public void move(@Nonnull Location location) {
         if (!location.world().equals(getWorld())) {
-            this.location.world().getEntities().remove(this);
+            getWorld().getEntities().remove(this);
             location.world().getEntities().add(this);
         }
         this.location = location;
@@ -51,8 +55,13 @@ public abstract class Entity {
         return location.world();
     }
 
-    public void paint(@Nonnull Graphics2D graphic) {
+    public void tick() {
+        if (isMoving()) stepForward();
     }
+
+    public abstract void paint(@Nonnull Graphics2D graphic);
+
+    public abstract boolean isMoving();
 
     @Override
     public boolean equals(Object o) {
