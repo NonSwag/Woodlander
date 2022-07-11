@@ -1,6 +1,6 @@
 package net.nonswag.tnl.woodlander.world.entities;
 
-import net.nonswag.tnl.woodlander.Woodlander;
+import net.nonswag.tnl.woodlander.GamePanel;
 import net.nonswag.tnl.woodlander.world.Location;
 import net.nonswag.tnl.woodlander.world.images.Images;
 
@@ -10,6 +10,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class Player extends Entity implements KeyListener {
+
+    public static final int SCREEN_X = GamePanel.SCREEN_WIDTH / 2 - (GamePanel.TILE_SIZE / 2);
+    public static final int SCREEN_Y = GamePanel.SCREEN_HEIGHT / 2 - (GamePanel.TILE_SIZE / 2);
 
     private int state = 0;
 
@@ -25,12 +28,8 @@ public class Player extends Entity implements KeyListener {
     }
 
     @Override
-    public void paint(@Nonnull Graphics2D graphic) {
-        Images model = getModel();
-        int s = model.getSize();
-        int x = Woodlander.WINDOW.getWidth() / 2 - s / 2;
-        int y = Woodlander.WINDOW.getHeight() / 2 - s / 2;
-        graphic.drawImage(model.getImage(), x, y, s, s, null);
+    public void render(@Nonnull Graphics2D graphic) {
+        graphic.drawImage(getModel().getImage(), SCREEN_X, SCREEN_Y, GamePanel.TILE_SIZE, GamePanel.TILE_SIZE, null);
     }
 
     @Override

@@ -16,50 +16,50 @@ public abstract class Entity {
     private static int ID = 0;
 
     @Nonnull
-    private Location location;
-    @Nonnull
     private Location.Direction direction = Location.Direction.DOWN;
     @Nonnull
     private final Rectangle hitbox = new Rectangle(8, 16, 32, 32);
+    @Nonnull
+    private final Location location;
     private final int id = ID++;
-    private double speed = 3;
+    private int speed = 3;
 
     protected Entity(@Nonnull Location location) {
         this.location = location;
-        location.world().getEntities().add(this);
+        location.getWorld().getEntities().add(this);
     }
 
     public void stepForward() {
         switch (getDirection()) {
-            case UP -> move(getLocation().x(), getLocation().y() - getSpeed());
-            case DOWN -> move(getLocation().x(), getLocation().y() + getSpeed());
-            case LEFT -> move(getLocation().x() - getSpeed(), getLocation().y());
-            case RIGHT -> move(getLocation().x() + getSpeed(), getLocation().y());
+            case UP -> move(getLocation().getX(), getLocation().getY() - getSpeed());
+            case DOWN -> move(getLocation().getX(), getLocation().getY() + getSpeed());
+            case LEFT -> move(getLocation().getX() - getSpeed(), getLocation().getY());
+            case RIGHT -> move(getLocation().getX() + getSpeed(), getLocation().getY());
         }
     }
 
-    public void move(double x, double y) {
-        move(new Location(getWorld(), x, y));
+    public void move(int x, int y) {
+        location.set(x, y);
     }
 
     public void move(@Nonnull Location location) {
-        if (!location.world().equals(getWorld())) {
+        if (!location.getWorld().equals(getWorld())) {
             getWorld().getEntities().remove(this);
-            location.world().getEntities().add(this);
+            location.getWorld().getEntities().add(this);
         }
-        this.location = location;
+        this.location.set(location);
     }
 
     @Nonnull
     public World getWorld() {
-        return location.world();
+        return location.getWorld();
     }
 
     public void tick() {
         if (isMoving()) stepForward();
     }
 
-    public abstract void paint(@Nonnull Graphics2D graphic);
+    public abstract void render(@Nonnull Graphics2D graphic);
 
     public abstract boolean isMoving();
 

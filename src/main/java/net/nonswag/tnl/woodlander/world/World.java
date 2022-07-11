@@ -1,7 +1,9 @@
 package net.nonswag.tnl.woodlander.world;
 
 import lombok.Getter;
+import net.nonswag.tnl.woodlander.GamePanel;
 import net.nonswag.tnl.woodlander.world.entities.Entity;
+import net.nonswag.tnl.woodlander.world.map.Map;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -25,8 +27,9 @@ public abstract class World {
 
     @Nonnull
     public Location center() {
-        int mid = map.getTiles().length / 2;
-        return new Location(this, mid * 48, (map.getTiles()[mid].length / 2d) * 48);
+        int mid = map.getTiles().length >> 1;
+        int tileSize = GamePanel.TILE_SIZE;
+        return new Location(this, mid * tileSize, (map.getTiles()[mid - 1].length >> 1) * tileSize);
     }
 
     @Override
@@ -40,5 +43,14 @@ public abstract class World {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        return "World{" +
+                "map=" + map +
+                ", name='" + name + '\'' +
+                ", entities=" + entities +
+                '}';
     }
 }

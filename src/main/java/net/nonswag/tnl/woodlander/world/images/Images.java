@@ -62,7 +62,6 @@ public enum Images {
     @Nonnull
     private final String file;
     private final boolean collidable;
-    private final int size = 48;
     @Nullable
     private Image image;
 

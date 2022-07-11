@@ -15,10 +15,6 @@ public class Tile {
         this.id = id;
     }
 
-    public int getSize() {
-        return Images.valueOf(id).getSize();
-    }
-
     @Nonnull
     public Image getImage() {
         return Images.valueOf(id).getImage();

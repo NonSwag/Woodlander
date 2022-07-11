@@ -6,8 +6,6 @@ import net.nonswag.tnl.woodlander.world.worlds.Overworld;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,12 +29,8 @@ public class Woodlander {
     public static boolean STOPPING = false;
 
     static {
-        try {
-            WORLDS.add(new Overworld());
-            GAME_PANEL = new GamePanel();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        WORLDS.add(new Overworld());
+        GAME_PANEL = new GamePanel();
     }
 
     public static void main(String[] args) {
@@ -53,8 +47,7 @@ public class Woodlander {
 
     private static void initWindow() {
         WINDOW.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        WINDOW.setPreferredSize(new Dimension(1080, 720));
-        WINDOW.setMinimumSize(new Dimension(540, 360));
+        WINDOW.setMinimumSize(GAME_PANEL.getMinimumSize());
         WINDOW.setContentPane(GAME_PANEL);
         // WINDOW.setResizable(false);
         WINDOW.pack();
