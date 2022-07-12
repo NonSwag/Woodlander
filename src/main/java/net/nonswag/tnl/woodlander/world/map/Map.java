@@ -60,18 +60,11 @@ public class Map {
     public void render(@Nonnull Location location, @Nonnull Graphics2D graphic) {
         for (int row = 0; row < tiles.length; row++) {
             int size = GamePanel.TILE_SIZE;
-            int worldY = row * size;
-            int screenY = worldY - location.getY() + Player.SCREEN_Y;
+            int screenY = (row * size) - location.getY() + Player.getScreenY();
             for (int col = 0; col < tiles[row].length; col++) {
                 Tile tile = tiles[row][col];
-                int worldX = col * size;
-                int screenX = worldX - location.getX() + Player.SCREEN_X;
-                if (worldX > location.getX() - screenX &&
-                        worldX < location.getX() + screenX &&
-                        worldY > location.getY() - screenY &&
-                        worldY < location.getY() + screenY) {
-                    graphic.drawImage(tile.getImage(), screenX, screenY, size, size, null);
-                }
+                int screenX = (col * size) - location.getX() + Player.getScreenX();
+                graphic.drawImage(tile.getImage(), screenX, screenY, size, size, null);
             }
         }
     }

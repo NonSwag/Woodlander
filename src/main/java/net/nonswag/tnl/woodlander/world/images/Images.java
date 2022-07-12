@@ -5,7 +5,7 @@ import lombok.Getter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.InputStream;
 
 @Getter
@@ -63,7 +63,7 @@ public enum Images {
     private final String file;
     private final boolean collidable;
     @Nullable
-    private Image image;
+    private BufferedImage image;
 
     Images(@Nonnull String file, boolean collidable) {
         this.collidable = collidable;
@@ -80,7 +80,7 @@ public enum Images {
     }
 
     @Nonnull
-    public Image getImage() {
+    public BufferedImage getImage() {
         if (image != null) return image;
         try (InputStream stream = getClass().getResourceAsStream(getFile())) {
             assert stream != null : getFile();

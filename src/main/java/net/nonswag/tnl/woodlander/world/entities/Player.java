@@ -11,9 +11,6 @@ import java.awt.event.KeyListener;
 
 public class Player extends Entity implements KeyListener {
 
-    public static final int SCREEN_X = GamePanel.SCREEN_WIDTH / 2 - (GamePanel.TILE_SIZE / 2);
-    public static final int SCREEN_Y = GamePanel.SCREEN_HEIGHT / 2 - (GamePanel.TILE_SIZE / 2);
-
     private int state = 0;
 
     private boolean up = false;
@@ -29,7 +26,7 @@ public class Player extends Entity implements KeyListener {
 
     @Override
     public void render(@Nonnull Graphics2D graphic) {
-        graphic.drawImage(getModel().getImage(), SCREEN_X, SCREEN_Y, GamePanel.TILE_SIZE, GamePanel.TILE_SIZE, null);
+        graphic.drawImage(getModel().getImage(), getScreenX(), getScreenY(), GamePanel.TILE_SIZE, GamePanel.TILE_SIZE, null);
     }
 
     @Override
@@ -87,5 +84,13 @@ public class Player extends Entity implements KeyListener {
             case LEFT -> Images.PLAYER_LEFT_2;
             case RIGHT -> Images.PLAYER_RIGHT_2;
         };
+    }
+
+    public static int getScreenX() {
+        return GamePanel.getScreenWidth() / 2 - (GamePanel.TILE_SIZE / 2);
+    }
+
+    public static int getScreenY() {
+        return GamePanel.getScreenHeight() / 2 - (GamePanel.TILE_SIZE / 2);
     }
 }

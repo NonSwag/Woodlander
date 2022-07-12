@@ -2,8 +2,10 @@ package net.nonswag.tnl.woodlander.world.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.nonswag.tnl.woodlander.GamePanel;
 import net.nonswag.tnl.woodlander.world.Location;
 import net.nonswag.tnl.woodlander.world.World;
+import net.nonswag.tnl.woodlander.world.tiles.Tile;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -22,7 +24,7 @@ public abstract class Entity {
     @Nonnull
     private final Location location;
     private final int id = ID++;
-    private int speed = 3;
+    private int speed = 10;
 
     protected Entity(@Nonnull Location location) {
         this.location = location;
@@ -39,15 +41,27 @@ public abstract class Entity {
     }
 
     public void move(int x, int y) {
+        if (collides(x, y)) return;
+        if (x < 0) x = 0;
+        if (y < 0) y = 0;
+        Tile[][] tiles = getWorld().getMap().getTiles();
+        int maxHeight = (tiles.length - 1) * GamePanel.TILE_SIZE;
+        if (y >= maxHeight) return;
+        int maxWidth = (tiles[y / GamePanel.TILE_SIZE].length - 1) * GamePanel.TILE_SIZE;
+        if (x >= maxWidth) return;
         location.set(x, y);
     }
 
     public void move(@Nonnull Location location) {
-        if (!location.getWorld().equals(getWorld())) {
-            getWorld().getEntities().remove(this);
-            location.getWorld().getEntities().add(this);
-        }
-        this.location.set(location);
+        move(location.getX(), location.getY());
+        if (location.getWorld().equals(getWorld())) return;
+        getWorld().getEntities().remove(this);
+        location.getWorld().getEntities().add(this);
+        this.location.setWorld(location.getWorld());
+    }
+
+    public boolean collides(int x, int y) {
+        return false;
     }
 
     @Nonnull

@@ -1,11 +1,13 @@
 package net.nonswag.tnl.woodlander;
 
 import net.nonswag.tnl.woodlander.world.World;
+import net.nonswag.tnl.woodlander.world.images.Images;
 import net.nonswag.tnl.woodlander.world.worlds.Overworld;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +48,7 @@ public class Woodlander {
     }
 
     private static void initWindow() {
+        WINDOW.setIconImage(Images.PLAYER_DOWN_1.getImage().getScaledInstance(64, 64, BufferedImage.SCALE_SMOOTH));
         WINDOW.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         WINDOW.setMinimumSize(GAME_PANEL.getMinimumSize());
         WINDOW.setContentPane(GAME_PANEL);
