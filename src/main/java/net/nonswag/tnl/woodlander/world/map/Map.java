@@ -1,7 +1,7 @@
 package net.nonswag.tnl.woodlander.world.map;
 
 import lombok.Getter;
-import net.nonswag.tnl.woodlander.GamePanel;
+import net.nonswag.tnl.woodlander.ui.GamePanel;
 import net.nonswag.tnl.woodlander.world.Location;
 import net.nonswag.tnl.woodlander.world.entities.Player;
 import net.nonswag.tnl.woodlander.world.images.Images;
@@ -64,7 +64,8 @@ public class Map {
             for (int col = 0; col < tiles[row].length; col++) {
                 Tile tile = tiles[row][col];
                 int screenX = (col * size) - location.getX() + Player.getScreenX();
-                graphic.drawImage(tile.getImage(), screenX, screenY, size, size, null);
+                if (!GamePanel.isOnScreen(screenX, screenY)) continue;
+                graphic.drawImage(tile.getImage(), screenX, screenY, null);
             }
         }
     }

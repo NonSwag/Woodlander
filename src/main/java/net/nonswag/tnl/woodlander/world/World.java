@@ -1,7 +1,7 @@
 package net.nonswag.tnl.woodlander.world;
 
 import lombok.Getter;
-import net.nonswag.tnl.woodlander.GamePanel;
+import net.nonswag.tnl.woodlander.ui.GamePanel;
 import net.nonswag.tnl.woodlander.world.entities.Entity;
 import net.nonswag.tnl.woodlander.world.map.Map;
 

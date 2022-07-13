@@ -1,6 +1,6 @@
 package net.nonswag.tnl.woodlander.world.entities;
 
-import net.nonswag.tnl.woodlander.GamePanel;
+import net.nonswag.tnl.woodlander.ui.GamePanel;
 import net.nonswag.tnl.woodlander.world.Location;
 import net.nonswag.tnl.woodlander.world.images.Images;
 
@@ -26,7 +26,12 @@ public class Player extends Entity implements KeyListener {
 
     @Override
     public void render(@Nonnull Graphics2D graphic) {
-        graphic.drawImage(getModel().getImage(), getScreenX(), getScreenY(), GamePanel.TILE_SIZE, GamePanel.TILE_SIZE, null);
+        graphic.drawImage(getModel().getImage(), getScreenX(), getScreenY(), null);
+    }
+
+    @Override
+    public boolean isOnScreen() {
+        return GamePanel.isOnScreen(getScreenX(), getScreenY());
     }
 
     @Override
@@ -35,6 +40,7 @@ public class Player extends Entity implements KeyListener {
 
     @Override
     public void keyPressed(@Nonnull KeyEvent event) {
+        if (GamePanel.PAUSE) return;
         if (event.getKeyCode() == KeyEvent.VK_W) {
             setDirection(Location.Direction.UP);
             up = true;
@@ -73,7 +79,7 @@ public class Player extends Entity implements KeyListener {
             else sprite = 0;
             state = 0;
         }
-        return sprite == 0 || !isMoving() ? switch (getDirection()) {
+        return GamePanel.PAUSE || sprite == 0 || !isMoving() ? switch (getDirection()) {
             case UP -> Images.PLAYER_UP_1;
             case DOWN -> Images.PLAYER_DOWN_1;
             case LEFT -> Images.PLAYER_LEFT_1;

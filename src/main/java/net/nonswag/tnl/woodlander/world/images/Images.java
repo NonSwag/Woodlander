@@ -1,10 +1,12 @@
 package net.nonswag.tnl.woodlander.world.images;
 
 import lombok.Getter;
+import net.nonswag.tnl.woodlander.ui.GamePanel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 
@@ -63,7 +65,7 @@ public enum Images {
     private final String file;
     private final boolean collidable;
     @Nullable
-    private BufferedImage image;
+    private Image image;
 
     Images(@Nonnull String file, boolean collidable) {
         this.collidable = collidable;
@@ -80,11 +82,11 @@ public enum Images {
     }
 
     @Nonnull
-    public BufferedImage getImage() {
+    public Image getImage() {
         if (image != null) return image;
         try (InputStream stream = getClass().getResourceAsStream(getFile())) {
             assert stream != null : getFile();
-            return image = ImageIO.read(stream);
+            return image = ImageIO.read(stream).getScaledInstance(GamePanel.TILE_SIZE, GamePanel.TILE_SIZE, BufferedImage.SCALE_SMOOTH);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

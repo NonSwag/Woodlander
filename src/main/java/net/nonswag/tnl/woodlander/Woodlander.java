@@ -1,5 +1,6 @@
 package net.nonswag.tnl.woodlander;
 
+import net.nonswag.tnl.woodlander.ui.GamePanel;
 import net.nonswag.tnl.woodlander.world.World;
 import net.nonswag.tnl.woodlander.world.images.Images;
 import net.nonswag.tnl.woodlander.world.worlds.Overworld;
@@ -7,9 +8,13 @@ import net.nonswag.tnl.woodlander.world.worlds.Overworld;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.MissingResourceException;
 
 public class Woodlander {
 
@@ -27,10 +32,19 @@ public class Woodlander {
     };
     @Nonnull
     public static final GamePanel GAME_PANEL;
+    @Nonnull
+    public static final Font FONT;
     public static int FPS = 60;
     public static boolean STOPPING = false;
 
     static {
+        String font = "/fonts/minecraft.ttf";
+        try (InputStream stream = Woodlander.class.getResourceAsStream(font)) {
+            if (stream == null) throw new MissingResourceException(font, Woodlander.class.getName(), font);
+            FONT = Font.createFont(Font.TRUETYPE_FONT, stream);
+        } catch (IOException | FontFormatException e) {
+            throw new RuntimeException(e);
+        }
         WORLDS.add(new Overworld());
         GAME_PANEL = new GamePanel();
     }

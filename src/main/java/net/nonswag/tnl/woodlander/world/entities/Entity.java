@@ -2,7 +2,7 @@ package net.nonswag.tnl.woodlander.world.entities;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.nonswag.tnl.woodlander.GamePanel;
+import net.nonswag.tnl.woodlander.ui.GamePanel;
 import net.nonswag.tnl.woodlander.world.Location;
 import net.nonswag.tnl.woodlander.world.World;
 import net.nonswag.tnl.woodlander.world.tiles.Tile;
@@ -71,6 +71,10 @@ public abstract class Entity {
 
     public void tick() {
         if (isMoving()) stepForward();
+    }
+
+    public boolean isOnScreen() {
+        return GamePanel.isOnScreen(getLocation().getX(), getLocation().getY());
     }
 
     public abstract void render(@Nonnull Graphics2D graphic);
