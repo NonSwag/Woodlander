@@ -43,16 +43,16 @@ public class Player extends Entity implements KeyListener {
     public void keyPressed(@Nonnull KeyEvent event) {
         if (GamePanel.PAUSE) return;
         if (event.getKeyCode() == KeyEvent.VK_W) {
-            setDirection(Location.Direction.UP);
+            getLocation().setDirection(Location.Direction.UP);
             up = true;
         } else if (event.getKeyCode() == KeyEvent.VK_S) {
-            setDirection(Location.Direction.DOWN);
+            getLocation().setDirection(Location.Direction.DOWN);
             down = true;
         } else if (event.getKeyCode() == KeyEvent.VK_D) {
-            setDirection(Location.Direction.RIGHT);
+            getLocation().setDirection(Location.Direction.RIGHT);
             right = true;
         } else if (event.getKeyCode() == KeyEvent.VK_A) {
-            setDirection(Location.Direction.LEFT);
+            getLocation().setDirection(Location.Direction.LEFT);
             left = true;
         }
     }
@@ -67,10 +67,10 @@ public class Player extends Entity implements KeyListener {
 
     @Override
     public boolean isMoving() {
-        return (up && getDirection().equals(Location.Direction.UP)) ||
-                (down && getDirection().equals(Location.Direction.DOWN)) ||
-                (right && getDirection().equals(Location.Direction.RIGHT)) ||
-                (left && getDirection().equals(Location.Direction.LEFT));
+        return (up && getLocation().getDirection().equals(Location.Direction.UP)) ||
+                (down && getLocation().getDirection().equals(Location.Direction.DOWN)) ||
+                (right && getLocation().getDirection().equals(Location.Direction.RIGHT)) ||
+                (left && getLocation().getDirection().equals(Location.Direction.LEFT));
     }
 
     @Nonnull
@@ -80,12 +80,12 @@ public class Player extends Entity implements KeyListener {
             else sprite = 0;
             state = 0;
         }
-        return GamePanel.PAUSE || sprite == 0 || !isMoving() ? switch (getDirection()) {
+        return GamePanel.PAUSE || sprite == 0 || !isMoving() ? switch (getLocation().getDirection()) {
             case UP -> Type.PLAYER_UP_1;
             case DOWN -> Type.PLAYER_DOWN_1;
             case LEFT -> Type.PLAYER_LEFT_1;
             case RIGHT -> Type.PLAYER_RIGHT_1;
-        } : switch (getDirection()) {
+        } : switch (getLocation().getDirection()) {
             case UP -> Type.PLAYER_UP_2;
             case DOWN -> Type.PLAYER_DOWN_2;
             case LEFT -> Type.PLAYER_LEFT_2;

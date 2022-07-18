@@ -19,8 +19,6 @@ public abstract class Entity {
     private static int ID = 0;
 
     @Nonnull
-    private Location.Direction direction = Location.Direction.DOWN;
-    @Nonnull
     private final Rectangle hitbox;
     @Nonnull
     private final Location location;
@@ -36,7 +34,7 @@ public abstract class Entity {
     }
 
     public void stepForward() {
-        switch (getDirection()) {
+        switch (getLocation().getDirection()) {
             case UP -> {
                 for (int i = 0; i < getSpeed(); i++) move(getLocation().getX(), getLocation().getY() - 1);
             }
@@ -68,11 +66,9 @@ public abstract class Entity {
         if (force || !collides(destination.getX(), destination.getY())) {
             location.set(destination.getX(), destination.getY());
             if (destination.getWorld().equals(getWorld())) return;
-            System.out.printf("previous: %s", getWorld()).println();
             getWorld().getEntities().remove(this);
             destination.getWorld().getEntities().add(this);
             location.setWorld(destination.getWorld());
-            System.out.printf("current: %s", getWorld()).println();
         } else if (collisionEvent != null) collisionEvent.accept(destination);
     }
 

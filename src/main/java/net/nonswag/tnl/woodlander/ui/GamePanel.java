@@ -61,7 +61,10 @@ public class GamePanel extends JPanel implements Runnable {
 
         player.setCollisionEvent(location -> {
             if (location.getWorld().getName().equals("Overworld") && location.getTile().getType().equals(Type.HUT)) {
-                World world = Woodlander.getWorld("Test");
+                World world = Woodlander.getWorld("Hut");
+                if (world != null) player.teleport(world.getSpawnLocation());
+            } else if (location.getWorld().getName().equals("Hut") && location.getTile().getType().equals(Type.DOOR)) {
+                World world = Woodlander.getWorld("Overworld");
                 if (world != null) player.teleport(world.getSpawnLocation());
             }
         });

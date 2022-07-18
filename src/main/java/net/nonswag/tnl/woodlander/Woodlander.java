@@ -5,7 +5,7 @@ import net.nonswag.tnl.woodlander.ui.GamePanel;
 import net.nonswag.tnl.woodlander.world.World;
 import net.nonswag.tnl.woodlander.world.images.Type;
 import net.nonswag.tnl.woodlander.world.worlds.Overworld;
-import net.nonswag.tnl.woodlander.world.worlds.Test;
+import net.nonswag.tnl.woodlander.world.worlds.Hut;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,7 +48,7 @@ public class Woodlander {
             throw new RuntimeException(e);
         }
         WORLDS.add(new Overworld());
-        WORLDS.add(new Test());
+        WORLDS.add(new Hut());
         GAME_PANEL = new GamePanel();
     }
 

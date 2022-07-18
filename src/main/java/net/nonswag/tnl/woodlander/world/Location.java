@@ -13,6 +13,8 @@ public class Location implements Cloneable {
 
     @Nonnull
     private World world;
+    @Nonnull
+    private Direction direction = Direction.DOWN;
     private int x, y;
 
     public Location(@Nonnull World world, int x, int y) {
@@ -39,8 +41,18 @@ public class Location implements Cloneable {
     }
 
     @Nonnull
+    public Location setDirection(@Nonnull Direction direction) {
+        this.direction = direction;
+        return this;
+    }
+
+    @Nonnull
     public Tile getTile() {
-        return world.getMap().getTiles()[getY() / GamePanel.TILE_SIZE][getX() / GamePanel.TILE_SIZE];
+        int y = this.y / GamePanel.TILE_SIZE;
+        int x = this.x / GamePanel.TILE_SIZE;
+        if (getDirection().isDown()) return world.getMap().getTiles()[y + 1][x];
+        if (getDirection().isRight()) return world.getMap().getTiles()[y][x + 1];
+        return world.getMap().getTiles()[y][x];
     }
 
     @Override
@@ -55,10 +67,26 @@ public class Location implements Cloneable {
     @Override
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     public Location clone() {
-        return new Location(getWorld(), getX(), getY());
+        return new Location(getWorld(), getX(), getY()).setDirection(getDirection());
     }
 
     public enum Direction {
-        UP, DOWN, LEFT, RIGHT
+        UP, DOWN, LEFT, RIGHT;
+
+        public boolean isUp() {
+            return equals(UP);
+        }
+
+        public boolean isDown() {
+            return equals(DOWN);
+        }
+
+        public boolean isLeft() {
+            return equals(LEFT);
+        }
+
+        public boolean isRight() {
+            return equals(RIGHT);
+        }
     }
 }
