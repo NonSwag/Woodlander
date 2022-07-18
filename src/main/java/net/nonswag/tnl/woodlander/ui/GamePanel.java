@@ -27,12 +27,23 @@ public class GamePanel extends JPanel implements Runnable {
     @Nonnull
     private final GameLoop gameLoop = new GameLoop(this);
     @Nonnull
-    private final Player player = new Player(new Location(Woodlander.WORLDS.get(0), 0, 0));
+    private final Player player = new Player(new Location(Woodlander.WORLDS.get(0), 1584, 1248));
 
     public GamePanel() {
         setPreferredSize(new Dimension(22 * TILE_SIZE, 13 * TILE_SIZE));
         setMinimumSize(new Dimension(getPreferredSize().width / 2, getPreferredSize().height / 2));
         addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyReleased(@Nonnull KeyEvent event) {
+                if (event.getKeyCode() == KeyEvent.VK_F11) {
+                    GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+                    if (environment.getDefaultScreenDevice().getFullScreenWindow() == null) {
+                        environment.getDefaultScreenDevice().setFullScreenWindow(Woodlander.WINDOW);
+                    } else environment.getDefaultScreenDevice().setFullScreenWindow(null);
+                }
+            }
+
             @Override
             public void keyPressed(@Nonnull KeyEvent event) {
                 if (event.getKeyCode() == KeyEvent.VK_ESCAPE) PAUSE = !PAUSE;
@@ -49,18 +60,25 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void paint(@Nonnull Graphics graphics) {
-        super.paint(graphics);
-        if (!(graphics instanceof Graphics2D graphic)) return;
-        World world = getPlayer().getWorld();
-        world.getMap().render(getPlayer().getLocation(), graphic);
-        for (Entity entity : world.getEntities()) if (entity.isOnScreen()) entity.render(graphic);
-        if (PAUSE) {
-            graphic.setColor(Color.WHITE);
-            graphic.setFont(Woodlander.FONT.deriveFont(60f));
-            graphic.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            graphic.drawString("PAUSE", getScreenWidth() / 2, getScreenHeight() / 2);
+        try {
+            super.paint(graphics);
+            if (!(graphics instanceof Graphics2D graphic)) return;
+            World world = getPlayer().getWorld();
+            world.getMap().render(getPlayer().getLocation(), graphic);
+            for (Entity entity : world.getEntities()) if (entity.isOnScreen()) entity.render(graphic);
+            if (PAUSE) {
+                graphic.setColor(Color.WHITE);
+                graphic.setFont(Woodlander.FONT.deriveFont(60f));
+                graphic.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                graphic.drawString("PAUSE", getScreenWidth() / 2, getScreenHeight() / 2);
+                Woodlander.WINDOW.setCursor(Cursor.getDefaultCursor());
+            } else Woodlander.WINDOW.setCursor(CursorManager.getInvisibleCursor());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        } finally {
+            graphics.dispose();
         }
-        graphic.dispose();
     }
 
     @Override

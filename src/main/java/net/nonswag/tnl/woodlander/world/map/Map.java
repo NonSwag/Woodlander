@@ -48,7 +48,7 @@ public class Map {
         for (int i = 0; i < strings.length; i++) {
             try {
                 int id = Integer.parseInt(strings[i]);
-                if (id >= 0 && id < Images.values().length) tiles[i] = new Tile(id);
+                if (id >= 0 && id < Images.count()) tiles[i] = new Tile(id);
                 else throw new MapParseException("Found no image with id %s".formatted(id));
             } catch (NumberFormatException e) {
                 throw new MapParseException("Error in line %s at column %s in file %s".formatted(line, i * 2 + 1, resource), e);

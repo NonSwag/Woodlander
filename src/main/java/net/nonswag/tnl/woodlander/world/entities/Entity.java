@@ -5,7 +5,6 @@ import lombok.Setter;
 import net.nonswag.tnl.woodlander.ui.GamePanel;
 import net.nonswag.tnl.woodlander.world.Location;
 import net.nonswag.tnl.woodlander.world.World;
-import net.nonswag.tnl.woodlander.world.tiles.Tile;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -20,36 +19,37 @@ public abstract class Entity {
     @Nonnull
     private Location.Direction direction = Location.Direction.DOWN;
     @Nonnull
-    private final Rectangle hitbox = new Rectangle(8, 16, 32, 32);
+    private final Rectangle hitbox;
     @Nonnull
     private final Location location;
     private final int id = ID++;
-    private int speed = 10;
+    private int speed = 4;
 
-    protected Entity(@Nonnull Location location) {
+    protected Entity(@Nonnull Location location, @Nonnull Rectangle hitbox) {
         this.location = location;
+        this.hitbox = hitbox;
         location.getWorld().getEntities().add(this);
     }
 
     public void stepForward() {
         switch (getDirection()) {
-            case UP -> move(getLocation().getX(), getLocation().getY() - getSpeed());
-            case DOWN -> move(getLocation().getX(), getLocation().getY() + getSpeed());
-            case LEFT -> move(getLocation().getX() - getSpeed(), getLocation().getY());
-            case RIGHT -> move(getLocation().getX() + getSpeed(), getLocation().getY());
+            case UP -> {
+                for (int i = 0; i < getSpeed(); i++) move(getLocation().getX(), getLocation().getY() - 1);
+            }
+            case DOWN -> {
+                for (int i = 0; i < getSpeed(); i++) move(getLocation().getX(), getLocation().getY() + 1);
+            }
+            case LEFT -> {
+                for (int i = 0; i < getSpeed(); i++) move(getLocation().getX() - 1, getLocation().getY());
+            }
+            case RIGHT -> {
+                for (int i = 0; i < getSpeed(); i++) move(getLocation().getX() + 1, getLocation().getY());
+            }
         }
     }
 
     public void move(int x, int y) {
-        if (collides(x, y)) return;
-        if (x < 0) x = 0;
-        if (y < 0) y = 0;
-        Tile[][] tiles = getWorld().getMap().getTiles();
-        int maxHeight = (tiles.length - 1) * GamePanel.TILE_SIZE;
-        if (y >= maxHeight) return;
-        int maxWidth = (tiles[y / GamePanel.TILE_SIZE].length - 1) * GamePanel.TILE_SIZE;
-        if (x >= maxWidth) return;
-        location.set(x, y);
+        if (!collides(x, y)) location.set(x, y);
     }
 
     public void move(@Nonnull Location location) {

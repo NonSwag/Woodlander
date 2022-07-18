@@ -1,5 +1,6 @@
 package net.nonswag.tnl.woodlander;
 
+import net.nonswag.tnl.woodlander.ui.CursorManager;
 import net.nonswag.tnl.woodlander.ui.GamePanel;
 import net.nonswag.tnl.woodlander.world.World;
 import net.nonswag.tnl.woodlander.world.images.Images;
@@ -66,9 +67,9 @@ public class Woodlander {
         WINDOW.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         WINDOW.setMinimumSize(GAME_PANEL.getMinimumSize());
         WINDOW.setContentPane(GAME_PANEL);
-        // WINDOW.setResizable(false);
         WINDOW.pack();
         WINDOW.setLocationRelativeTo(null);
         WINDOW.setVisible(true);
+        WINDOW.setCursor(CursorManager.getInvisibleCursor());
     }
 }

@@ -29,7 +29,7 @@ public abstract class World {
     public Location center() {
         int mid = map.getTiles().length >> 1;
         int tileSize = GamePanel.TILE_SIZE;
-        return new Location(this, mid * tileSize, (map.getTiles()[mid - 1].length >> 1) * tileSize);
+        return new Location(this, (map.getTiles()[mid - 1].length >> 1) * tileSize, mid * tileSize);
     }
 
     @Override

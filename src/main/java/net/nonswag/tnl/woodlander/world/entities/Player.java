@@ -3,6 +3,7 @@ package net.nonswag.tnl.woodlander.world.entities;
 import net.nonswag.tnl.woodlander.ui.GamePanel;
 import net.nonswag.tnl.woodlander.world.Location;
 import net.nonswag.tnl.woodlander.world.images.Images;
+import net.nonswag.tnl.woodlander.world.tiles.Tile;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -21,7 +22,7 @@ public class Player extends Entity implements KeyListener {
     private int sprite = 0;
 
     public Player(@Nonnull Location location) {
-        super(location);
+        super(location, new Rectangle(8, 16, 31, 31));
     }
 
     @Override
@@ -74,7 +75,7 @@ public class Player extends Entity implements KeyListener {
 
     @Nonnull
     private Images getModel() {
-        if (isMoving() && state++ >= 13) {
+        if (isMoving() && state++ >= 40 / getSpeed()) {
             if (sprite == 0) sprite = 1;
             else sprite = 0;
             state = 0;
@@ -90,6 +91,37 @@ public class Player extends Entity implements KeyListener {
             case LEFT -> Images.PLAYER_LEFT_2;
             case RIGHT -> Images.PLAYER_RIGHT_2;
         };
+    }
+
+    @Override
+    public boolean collides(int x, int y) {
+        if (y < 0 || x < 0) return true;
+        int size = GamePanel.TILE_SIZE;
+        int up = y + getHitbox().y, down = y + getHitbox().y + getHitbox().height;
+        int left = x + getHitbox().x, right = x + getHitbox().x + getHitbox().width;
+        int upRow = up / size, downRow = down / size, leftColumn = left / size, rightColumn = right / size;
+        if (upRow < 0 || rightColumn < 0) return true;
+        Tile firstTile, secondTile;
+        if (upRow >= getWorld().getMap().getTiles().length) return true;
+        if (downRow >= getWorld().getMap().getTiles().length) return true;
+        if (rightColumn >= getWorld().getMap().getTiles()[y / size].length) return true;
+        if (leftColumn >= getWorld().getMap().getTiles()[y / size].length) return true;
+        if (leftColumn >= getWorld().getMap().getTiles()[upRow].length) return true;
+        if (rightColumn >= getWorld().getMap().getTiles()[upRow].length) return true;
+        firstTile = getWorld().getMap().getTiles()[upRow][leftColumn];
+        secondTile = getWorld().getMap().getTiles()[upRow][rightColumn];
+        if (firstTile.isCollidable() || secondTile.isCollidable()) return true;
+        if (leftColumn >= getWorld().getMap().getTiles()[downRow].length) return true;
+        firstTile = getWorld().getMap().getTiles()[downRow][leftColumn];
+        secondTile = getWorld().getMap().getTiles()[downRow][rightColumn];
+        if (firstTile.isCollidable() || secondTile.isCollidable()) return true;
+        if (leftColumn >= getWorld().getMap().getTiles()[upRow].length) return true;
+        firstTile = getWorld().getMap().getTiles()[upRow][leftColumn];
+        secondTile = getWorld().getMap().getTiles()[downRow][leftColumn];
+        if (firstTile.isCollidable() || secondTile.isCollidable()) return true;
+        firstTile = getWorld().getMap().getTiles()[upRow][rightColumn];
+        secondTile = getWorld().getMap().getTiles()[downRow][rightColumn];
+        return firstTile.isCollidable() || secondTile.isCollidable();
     }
 
     public static int getScreenX() {

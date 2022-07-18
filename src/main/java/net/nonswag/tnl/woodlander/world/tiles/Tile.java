@@ -15,6 +15,10 @@ public class Tile {
         this.id = id;
     }
 
+    public boolean isCollidable() {
+        return Images.valueOf(id).isCollidable();
+    }
+
     @Nonnull
     public Image getImage() {
         return Images.valueOf(id).getImage();
