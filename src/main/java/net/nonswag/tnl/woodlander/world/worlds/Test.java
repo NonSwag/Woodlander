@@ -7,15 +7,15 @@ import net.nonswag.tnl.woodlander.world.map.MapParseException;
 
 import javax.annotation.Nonnull;
 
-public class Overworld extends World {
+public class Test extends World {
 
-    public Overworld() throws MapParseException {
-        super("Overworld", new Map("/worlds/overworld.data"));
+    public Test() throws MapParseException {
+        super("Test", new Map("/worlds/test.data"));
     }
 
     @Nonnull
     @Override
     public Location getSpawnLocation() {
-        return new Location(this, 1584, 1248);
+        return new Location(this, 240, 240);
     }
 }

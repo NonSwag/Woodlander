@@ -3,10 +3,10 @@ package net.nonswag.tnl.woodlander.ui;
 import lombok.Getter;
 import net.nonswag.tnl.woodlander.GameLoop;
 import net.nonswag.tnl.woodlander.Woodlander;
-import net.nonswag.tnl.woodlander.world.Location;
 import net.nonswag.tnl.woodlander.world.World;
 import net.nonswag.tnl.woodlander.world.entities.Entity;
 import net.nonswag.tnl.woodlander.world.entities.Player;
+import net.nonswag.tnl.woodlander.world.images.Type;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -14,6 +14,8 @@ import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.List;
+import java.util.stream.IntStream;
 
 @Getter
 public class GamePanel extends JPanel implements Runnable {
@@ -27,7 +29,7 @@ public class GamePanel extends JPanel implements Runnable {
     @Nonnull
     private final GameLoop gameLoop = new GameLoop(this);
     @Nonnull
-    private final Player player = new Player(new Location(Woodlander.WORLDS.get(0), 1584, 1248));
+    private final Player player = new Player(Woodlander.WORLDS.get(0).getSpawnLocation());
 
     public GamePanel() {
         setPreferredSize(new Dimension(22 * TILE_SIZE, 13 * TILE_SIZE));
@@ -56,6 +58,13 @@ public class GamePanel extends JPanel implements Runnable {
         addKeyListener(player);
         setFocusable(true);
         gameLoop.start();
+
+        player.setCollisionEvent(location -> {
+            if (location.getWorld().getName().equals("Overworld") && location.getTile().getType().equals(Type.HUT)) {
+                World world = Woodlander.getWorld("Test");
+                if (world != null) player.teleport(world.getSpawnLocation());
+            }
+        });
     }
 
     @Override
@@ -83,7 +92,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        if (!PAUSE) for (Entity entity : getPlayer().getWorld().getEntities()) entity.tick();
+        if (!PAUSE) {
+            List<Entity> entities = getPlayer().getWorld().getEntities();
+            IntStream.range(0, entities.size()).forEach(i -> entities.get(i).tick());
+        }
         repaint();
     }
 

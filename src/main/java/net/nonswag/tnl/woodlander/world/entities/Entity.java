@@ -7,8 +7,10 @@ import net.nonswag.tnl.woodlander.world.Location;
 import net.nonswag.tnl.woodlander.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 @Getter
 @Setter
@@ -22,6 +24,8 @@ public abstract class Entity {
     private final Rectangle hitbox;
     @Nonnull
     private final Location location;
+    @Nullable
+    private Consumer<Location> collisionEvent;
     private final int id = ID++;
     private int speed = 4;
 
@@ -49,15 +53,27 @@ public abstract class Entity {
     }
 
     public void move(int x, int y) {
-        if (!collides(x, y)) location.set(x, y);
+        move(location.clone().set(x, y));
     }
 
-    public void move(@Nonnull Location location) {
-        move(location.getX(), location.getY());
-        if (location.getWorld().equals(getWorld())) return;
-        getWorld().getEntities().remove(this);
-        location.getWorld().getEntities().add(this);
-        this.location.setWorld(location.getWorld());
+    public void move(@Nonnull Location destination) {
+        move(destination, false);
+    }
+
+    public void teleport(@Nonnull Location destination) {
+        move(destination, true);
+    }
+
+    private void move(@Nonnull Location destination, boolean force) {
+        if (force || !collides(destination.getX(), destination.getY())) {
+            location.set(destination.getX(), destination.getY());
+            if (destination.getWorld().equals(getWorld())) return;
+            System.out.printf("previous: %s", getWorld()).println();
+            getWorld().getEntities().remove(this);
+            destination.getWorld().getEntities().add(this);
+            location.setWorld(destination.getWorld());
+            System.out.printf("current: %s", getWorld()).println();
+        } else if (collisionEvent != null) collisionEvent.accept(destination);
     }
 
     public boolean collides(int x, int y) {

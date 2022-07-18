@@ -4,7 +4,7 @@ import lombok.Getter;
 import net.nonswag.tnl.woodlander.ui.GamePanel;
 import net.nonswag.tnl.woodlander.world.Location;
 import net.nonswag.tnl.woodlander.world.entities.Player;
-import net.nonswag.tnl.woodlander.world.images.Images;
+import net.nonswag.tnl.woodlander.world.images.Type;
 import net.nonswag.tnl.woodlander.world.tiles.Tile;
 
 import javax.annotation.Nonnull;
@@ -48,10 +48,11 @@ public class Map {
         for (int i = 0; i < strings.length; i++) {
             try {
                 int id = Integer.parseInt(strings[i]);
-                if (id >= 0 && id < Images.count()) tiles[i] = new Tile(id);
-                else throw new MapParseException("Found no image with id %s".formatted(id));
+                if (Type.exists(id)) tiles[i] = new Tile(id);
+                else throw new MapParseException("Found no image with id %s (file %s line %s column ~%s)".
+                        formatted(id, resource, line, i * 2 + 1));
             } catch (NumberFormatException e) {
-                throw new MapParseException("Error in line %s at column %s in file %s".formatted(line, i * 2 + 1, resource), e);
+                throw new MapParseException("Error in line %s at column ~%s in file %s".formatted(line, i * 2 + 1, resource), e);
             }
         }
         return tiles;

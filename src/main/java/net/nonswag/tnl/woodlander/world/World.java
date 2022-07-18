@@ -34,10 +34,7 @@ public abstract class World {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        World world = (World) o;
-        return name.equals(world.name);
+        return o instanceof World world && world.name.equals(name);
     }
 
     @Override
@@ -48,9 +45,10 @@ public abstract class World {
     @Override
     public String toString() {
         return "World{" +
-                "map=" + map +
-                ", name='" + name + '\'' +
-                ", entities=" + entities +
+                "name='" + name + '\'' +
                 '}';
     }
+
+    @Nonnull
+    public abstract Location getSpawnLocation();
 }

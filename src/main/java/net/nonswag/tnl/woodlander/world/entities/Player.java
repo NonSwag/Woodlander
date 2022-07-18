@@ -2,7 +2,7 @@ package net.nonswag.tnl.woodlander.world.entities;
 
 import net.nonswag.tnl.woodlander.ui.GamePanel;
 import net.nonswag.tnl.woodlander.world.Location;
-import net.nonswag.tnl.woodlander.world.images.Images;
+import net.nonswag.tnl.woodlander.world.images.Type;
 import net.nonswag.tnl.woodlander.world.tiles.Tile;
 
 import javax.annotation.Nonnull;
@@ -74,22 +74,22 @@ public class Player extends Entity implements KeyListener {
     }
 
     @Nonnull
-    private Images getModel() {
+    private Type getModel() {
         if (isMoving() && state++ >= 40 / getSpeed()) {
             if (sprite == 0) sprite = 1;
             else sprite = 0;
             state = 0;
         }
         return GamePanel.PAUSE || sprite == 0 || !isMoving() ? switch (getDirection()) {
-            case UP -> Images.PLAYER_UP_1;
-            case DOWN -> Images.PLAYER_DOWN_1;
-            case LEFT -> Images.PLAYER_LEFT_1;
-            case RIGHT -> Images.PLAYER_RIGHT_1;
+            case UP -> Type.PLAYER_UP_1;
+            case DOWN -> Type.PLAYER_DOWN_1;
+            case LEFT -> Type.PLAYER_LEFT_1;
+            case RIGHT -> Type.PLAYER_RIGHT_1;
         } : switch (getDirection()) {
-            case UP -> Images.PLAYER_UP_2;
-            case DOWN -> Images.PLAYER_DOWN_2;
-            case LEFT -> Images.PLAYER_LEFT_2;
-            case RIGHT -> Images.PLAYER_RIGHT_2;
+            case UP -> Type.PLAYER_UP_2;
+            case DOWN -> Type.PLAYER_DOWN_2;
+            case LEFT -> Type.PLAYER_LEFT_2;
+            case RIGHT -> Type.PLAYER_RIGHT_2;
         };
     }
 
