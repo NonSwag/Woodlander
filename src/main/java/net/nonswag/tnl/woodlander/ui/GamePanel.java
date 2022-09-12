@@ -43,13 +43,14 @@ public class GamePanel extends JPanel implements Runnable {
                     if (environment.getDefaultScreenDevice().getFullScreenWindow() == null) {
                         environment.getDefaultScreenDevice().setFullScreenWindow(Woodlander.WINDOW);
                     } else environment.getDefaultScreenDevice().setFullScreenWindow(null);
+                } else if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    PAUSE = !PAUSE;
                 }
             }
 
             @Override
             public void keyPressed(@Nonnull KeyEvent event) {
-                if (event.getKeyCode() == KeyEvent.VK_ESCAPE) PAUSE = !PAUSE;
-                else if (PAUSE) event.consume();
+                if (event.getKeyCode() != KeyEvent.VK_ESCAPE && PAUSE) event.consume();
             }
         });
         requestFocus(FocusEvent.Cause.ACTIVATION);
@@ -82,7 +83,7 @@ public class GamePanel extends JPanel implements Runnable {
                 graphic.setColor(Color.WHITE);
                 graphic.setFont(Woodlander.FONT.deriveFont(60f));
                 graphic.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-                graphic.drawString("PAUSE", getScreenWidth() / 2, getScreenHeight() / 2);
+                graphic.drawString("PAUSE", getScreenWidth() / 2 - 30, getScreenHeight() / 2 - 30);
                 Woodlander.WINDOW.setCursor(Cursor.getDefaultCursor());
             } else Woodlander.WINDOW.setCursor(CursorManager.getInvisibleCursor());
         } catch (Exception e) {
